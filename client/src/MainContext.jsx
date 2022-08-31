@@ -8,6 +8,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 import {useNavigate} from "react-router-dom";
+import axios from "axios";
 
 export const MainContext = createContext();
 
@@ -81,7 +82,7 @@ const tempData = [
 export const MainContextProvider = ({children})=>{
     const navigate = useNavigate();
     const [user,setUser] = useState(null);
-    const [employees,setEmployees] = useState(tempData);
+    const [employees,setEmployees] = useState([]);
 
 
 
@@ -94,6 +95,17 @@ export const MainContextProvider = ({children})=>{
       await signOut(auth);
       setUser(null);
     };
+
+    const getData = async () => {
+      await axios.get("http://localhost:5000/Users/GetEmployees").then((response) => {
+        setEmployees(response.data)
+      })
+    }
+
+    useEffect(() => {
+      
+      getData();
+    },[])
 
     // logOut()
   
@@ -112,7 +124,7 @@ export const MainContextProvider = ({children})=>{
   
 
     return (
-        <MainContext.Provider value={{ user,setUser,logOut,googleSignIn,employees }}>
+        <MainContext.Provider value={{ user,setUser,logOut,googleSignIn,employees,setEmployees }}>
           {children}
         </MainContext.Provider>
       );
