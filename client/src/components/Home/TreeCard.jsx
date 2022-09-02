@@ -1,31 +1,44 @@
-import React,{useContext} from "react";
-import { Paper, Typography } from "@mui/material";
+import React, { useContext } from "react";
+import {
+  Paper,
+  Typography,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  ListItemIcon,
+  Avatar,
+} from "@mui/material";
 import Gravatar from "react-gravatar";
-import {HomeContext} from "./HomeContext";
+import { HomeContext } from "./HomeContext";
 
 const paperStyle = {
   display: "inline-block",
-  padding: "5px",
-  cursor:"pointer"
+  cursor: "pointer",
 };
 
 function TreeCard({ node }) {
-  const {handleClickOpen} = useContext(HomeContext);
+  const { handleClickOpenProfile } = useContext(HomeContext);
   const handleClick = (event) => {
     event.preventDefault();
-    handleClickOpen(node);
-  }
+    handleClickOpenProfile(node);
+  };
   return (
-    <Paper elevation={3} style={paperStyle} onClick={handleClick}>
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <Gravatar email={node.email} style={{ margin: "3px" }} />
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <Typography variant="h6" noWrap>
-            {node.firstName + " " + node.lastName}
-          </Typography>
-          <Typography variant="subtitle1">{node.position}</Typography>
-        </div>
-      </div>
+    <Paper
+      elevation={3}
+      style={paperStyle}
+      id={node.empNum}
+      onClick={handleClick}
+    >
+      <ListItem>
+        <ListItemIcon>
+          <Avatar><Gravatar email={node.email} style={{ margin: "3px" }} /></Avatar>
+        </ListItemIcon>
+        
+        <ListItemText
+          primary={node.firstName + " " + node.lastName}
+          secondary={node.position}
+        />
+      </ListItem>
     </Paper>
   );
 }

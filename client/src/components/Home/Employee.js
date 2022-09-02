@@ -9,6 +9,7 @@ export default class employee {
       this.salary = node.salary;
       this.manager = node.manager;
       this.DOB = node.DOB;
+      this.children = node.children
     }
   
     
