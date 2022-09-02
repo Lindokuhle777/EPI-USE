@@ -16,6 +16,9 @@ const paperStyle = {
   cursor: "pointer",
 };
 
+// Graph Node
+// If the used hasn't uploaded an image, we use gravatar
+
 function TreeCard({ node }) {
   const { handleClickOpenProfile } = useContext(HomeContext);
   const handleClick = (event) => {
@@ -24,14 +27,16 @@ function TreeCard({ node }) {
   };
   return (
     <Paper
-      elevation={3}
+      elevation={10}
       style={paperStyle}
       id={node.empNum}
       onClick={handleClick}
     >
       <ListItem>
         <ListItemIcon>
-          <Avatar><Gravatar email={node.email} style={{ margin: "3px" }} /></Avatar>
+          {node.imageUrl !== null &&(<Avatar src={node.imageUrl}/>)}
+          {node.imageUrl === null &&<Avatar><Gravatar email={node.email} style={{ margin: "3px" }} /></Avatar>}
+          
         </ListItemIcon>
         
         <ListItemText

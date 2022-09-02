@@ -4,6 +4,8 @@ import { Tree, TreeNode } from "react-organizational-chart";
 import TreeCard from "./TreeCard";
 import Employee from "./Employee";
 
+// Used to Recursively show other nodes
+
 function CustomTreeNode({ node }) {
   const { employees } = useContext(MainContext);
 

@@ -1,23 +1,14 @@
 import React, { useState, useContext } from "react";
 import { styled, useTheme } from "@mui/material/styles";
-import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import CssBaseline from "@mui/material/CssBaseline";
-import MuiAppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -29,10 +20,17 @@ import { Avatar, TextField } from "@mui/material";
 import { MainContext } from "../../MainContext";
 import Gravatar from "react-gravatar";
 
-const drawerWidth = window.innerWidth * 0.32;
+/*
+  Search Function
+  * Used to search for an employee using a certain criteria e.g position and last name
+  * The employee number can also be used but not using a substring on thaemployee number 
+*/
+
+const drawerWidth = window.innerWidth * 0.3;
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
+  backgroundColor: "rgba(0,0,0,0.06)",
   alignItems: "center",
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
@@ -46,27 +44,26 @@ const options = [
   "Last Name",
   "Position",
   "Employee Number",
-];
+]; //Search option
 
 function SearchDrawer({ open, handleDrawerClose }) {
   const { employees } = useContext(MainContext);
   const theme = useTheme();
   const [value, setValue] = useState(options[0]);
   const [output, setOutput] = useState([]);
-  const [empty,setEmpty] = useState(null);
+  const [empty, setEmpty] = useState(null);
 
   const handleChange = (event) => {
     setValue(event.target.value);
     document.getElementById("searchBox").value = "";
-    setOutput([])
+    setOutput([]);
   };
 
   const onChange = (event) => {
     setEmpty(false);
     const curr = event.target.value.toLowerCase();
     setOutput([]);
-    if(curr === "") return;
-    
+    if (curr === "") return;
 
     if (value === "Email") {
       employees.map((employee) => {
@@ -122,19 +119,26 @@ function SearchDrawer({ open, handleDrawerClose }) {
       open={open}
     >
       <DrawerHeader>
-        <Typography variant="h4" style={{ marginRight: "20%" }}>
-          Search
-        </Typography>
-        <IconButton onClick={handleDrawerClose}>
-          {theme.direction === "ltr" ? (
-            <ChevronLeftIcon fontSize="large" />
-          ) : (
-            <ChevronRightIcon />
-          )}
-        </IconButton>
+        <div
+          style={{ textAlign: "center", flexDirection: "row", display: "flex" }}
+        >
+          <Typography
+            variant="h4"
+            style={{ position: "absolute", right: 0, left: 0 }}
+          >
+            Search
+          </Typography>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === "ltr" ? (
+              <ChevronLeftIcon fontSize="large" />
+            ) : (
+              <ChevronRightIcon />
+            )}
+          </IconButton>
+        </div>
       </DrawerHeader>
 
-      <FormControl>
+      <FormControl style={{ backgroundColor: "rgba(0,0,0,0.06)" }}>
         <FormLabel id="demo-controlled-radio-buttons-group">
           Select Field
         </FormLabel>
@@ -146,7 +150,7 @@ function SearchDrawer({ open, handleDrawerClose }) {
           style={{
             padding: "0 20px",
             display: "grid",
-            gridTemplateColumns: "auto auto",
+            gridTemplateColumns: "50% 50%",
           }}
         >
           {options.map((option) => (
@@ -159,26 +163,45 @@ function SearchDrawer({ open, handleDrawerClose }) {
           ))}
         </RadioGroup>
       </FormControl>
-      <TextField
-      id="searchBox"
-        onChange={onChange}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-        placeholder={"Search by " + value}
-        size="small"
-        style={{ margin: "10px 15px" }}
-      />
+      <div
+        style={{ padding: "10px 15px", backgroundColor: "rgba(0,0,0,0.06)" }}
+      >
+        {" "}
+        <TextField
+          id="searchBox"
+          onChange={onChange}
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+          placeholder={"Search by " + value}
+          size="small"
+        />
+      </div>
 
-      <List style={{ height: "70vh", overflow: "auto" }}>
-        {(empty===true && output.length===0) && <Typography variant="h4">No results</Typography>}
-        
+      <List
+        style={{
+          height: "70vh",
+          overflow: "auto",
+          backgroundColor: "rgba(0,0,0,0.06)",
+          padding: "0 5px",
+        }}
+      >
+        {empty === true && output.length === 0 && (
+          <Typography variant="h4">No results</Typography>
+        )}
+
         {output.map((item) => (
           <ListItem
+            style={{
+              margin: "5px 0",
+              borderRadius: "10px",
+              backgroundColor: "white",
+            }}
             key={item.email}
             button
             onClick={(event) => {

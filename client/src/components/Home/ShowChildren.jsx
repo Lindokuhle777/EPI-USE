@@ -1,5 +1,14 @@
-import { Typography, DialogContent, Stack } from "@mui/material";
-import React, { useEffect } from "react";
+import {
+  DialogContent,
+  DialogTitle,
+  List,
+  ListItem,
+  ListItemIcon,
+  Avatar,
+  ListItemText,
+} from "@mui/material";
+import React from "react";
+import Gravatar from "react-gravatar";
 import TreeCard from "./TreeCard";
 
 //Used to display all the children on the currProfile
@@ -7,26 +16,67 @@ import TreeCard from "./TreeCard";
 function ShowChildren({ childrenArr }) {
   //childrenArr in a list of Employee objects
 
+  const handleClick = (empNum) => {
+    document.getElementById("closeBtn").click();
+    setTimeout(() => {
+      document.getElementById(empNum).click();
+    }, 1000);
+  };
+
   return (
-    <DialogContent
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        textAlign: "center",
-      }}
-    >
-      <Typography variant="h4" gutterBottom>
-        Children
-      </Typography>
-      <Stack
-        spacing={2}
-        style={{ height: "40vh", overflow: "auto", padding: "0 5px" }}
+    <>
+      <DialogTitle
+        style={{
+          textAlign: "center",
+          fontSize: "30px",
+          backgroundColor: "rgba(0,0,0,0.06)",
+        }}
       >
-        {childrenArr.map((child) => (
-          <TreeCard node={child} />
-        ))}
-      </Stack>
-    </DialogContent>
+        Children
+      </DialogTitle>
+      <DialogContent
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          textAlign: "center",
+          backgroundColor: "rgba(0,0,0,0.06)",
+        }}
+      >
+        <List >
+          {childrenArr.map((child) => (
+            <ListItem
+              key={child.empNum}
+              onClick={(event) => {
+                event.preventDefault();
+                handleClick(child.empNum);
+              }}
+              style={{
+                backgroundColor: "white",
+                margin: "5px 0",
+                borderRadius: "10px",
+              }}
+            >
+              <ListItemIcon>
+                {child.imageUrl === null && (
+                  <Gravatar
+                    size={40}
+                    email={child.email}
+                    style={{ borderRadius: "50%" }}
+                  />
+                )}
+                {child.imageUrl !== null && (
+                  <Avatar sx={{ width: 40, height: 40 }} src={child.imageUrl} />
+                )}
+              </ListItemIcon>
+              <ListItemText
+                primary={child.firstName + " " + child.lastName}
+                secondary={child.position}
+              />
+            </ListItem>
+          ))}
+        </List>
+      </DialogContent>
+    </>
   );
 }
 

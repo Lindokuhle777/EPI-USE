@@ -18,7 +18,7 @@ const paperStyle = {
   textAlign: "center",
   display: "flex",
   flexDirection: "column",
-  paddingBottom: "30px",
+  paddingTop: "10px",
   position: "absolute",
   top: "50%",
   left: "50%",
@@ -37,7 +37,6 @@ const btnStyle = {
 function NewAccount({ handleNewAccount }) {
   // const { setMessage, setOpen } = useContext(LoginContext);
   const initialValues = {
-    name: "",
     email: "",
     password: "",
     conPassword: "",
@@ -63,7 +62,6 @@ function NewAccount({ handleNewAccount }) {
   };
 
   const validation = YUP.object().shape({
-    name: YUP.string().required("Required"),
     email: YUP.string().email("Enter valid email").required("Required"),
     password: YUP.string()
       .min(
@@ -79,17 +77,20 @@ function NewAccount({ handleNewAccount }) {
 
   return (
     <Paper elevation={15} style={paperStyle}>
-      <div style={{ display: "flex", flexDirection: "row",textAlign:"center" }}>
-        <IconButton onClick={handleNewAccount} >
-          <ArrowBackIcon />
-        </IconButton>
-        <Typography
-          variant="h4"
-          style={{ marginTop: "5%", marginBottom: "10%", color: "#115571",marginLeft:"8%" }}
-        >
-          New Account
-        </Typography>
+      <div style={{ position: "absolute",left:10 }}> <IconButton onClick={handleNewAccount} >
+        <ArrowBackIcon />
+      </IconButton>
       </div>
+
+
+
+      <Typography
+        variant="h4"
+        style={{ color: "#115571", }}
+      >
+        New Account
+      </Typography>
+
 
       <Formik
         initialValues={initialValues}
@@ -105,15 +106,7 @@ function NewAccount({ handleNewAccount }) {
               paddingRight: "7%",
             }}
           >
-            <Field
-              as={TextField}
-              label="Name"
-              name="name"
-              type="text"
-              size="small"
-              style={fieldStyles}
-              helperText={<ErrorMessage name="name" />}
-            />
+
             <Field
               as={TextField}
               label="Email"

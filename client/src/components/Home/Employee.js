@@ -10,6 +10,12 @@ export default class employee {
       this.manager = node.manager;
       this.DOB = node.DOB;
       this.children = node.children
+      if(node.imageUrl === undefined){
+        this.imageUrl = null;
+      }else{
+        this.imageUrl = node.imageUrl;
+      }
+      
     }
   
     

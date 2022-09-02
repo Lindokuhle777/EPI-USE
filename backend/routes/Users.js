@@ -90,6 +90,13 @@ router.post("/", async (req, res) => {
   const manager = req.body.manager;
   const salary = req.body.salary;
   const position = req.body.position;
+  let imageUrl;
+  if(req.body.imageUrl !== undefined){
+    imageUrl = req.body.imageUrl;
+  }else{
+    imageUrl = null
+  }
+  
 
   const ref = doc(db, "Employees", empNum);
 
@@ -106,6 +113,7 @@ router.post("/", async (req, res) => {
       position,
       manager,
       empNum,
+      imageUrl
     };
     await updateDoc(ref, data);
 
@@ -120,6 +128,7 @@ router.post("/", async (req, res) => {
       salary,
       DOB,
       position,
+      imageUrl,
       children: [], // a new emp has no children
       empNum: newEmpNum,
       manager,

@@ -1,61 +1,76 @@
-import React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
+import React, { useContext } from "react";
+import { styled } from "@mui/material/styles";
+import MuiAppBar from "@mui/material/AppBar";
+import MenuIcon from "@mui/icons-material/Menu";
+import { Avatar, Menu, MenuItem, Toolbar, IconButton } from "@mui/material";
+import { MainContext } from "../../MainContext";
 
-const drawerWidth = window.innerWidth *.32;
-
+const drawerWidth = window.innerWidth * 0.3;
 
 const AppBar = styled(MuiAppBar, {
-    shouldForwardProp: (prop) => prop !== 'open',
-  })(({ theme, open }) => ({
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
+  shouldForwardProp: (prop) => prop !== "open",
+})(({ theme, open }) => ({
+  transition: theme.transitions.create(["margin", "width"], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    width: `calc(100% - ${drawerWidth}px)`,
+    marginLeft: `${drawerWidth}px`,
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
     }),
-    ...(open && {
-      width: `calc(100% - ${drawerWidth}px)`,
-      marginLeft: `${drawerWidth}px`,
-      transition: theme.transitions.create(['margin', 'width'], {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    }),
-  }));
+  }),
+}));
 
-function HomeAppBar({open,handleDrawerOpen}) {
-  return  <AppBar position="fixed" open={open}>
-  <Toolbar>
-    <IconButton
-      color="inherit"
-      aria-label="open drawer"
-      onClick={handleDrawerOpen}
-      edge="start"
-      sx={{ mr: 2, ...(open && { display: 'none' }) }}
-    >
-      <MenuIcon />
-    </IconButton>
-    <Typography variant="h6" noWrap component="div">
-      Persistent drawer
-    </Typography>
-  </Toolbar>
-</AppBar>
+//Main App Bar
+
+function HomeAppBar({ open, handleDrawerOpen }) {
+  const { user, logOut } = useContext(MainContext);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  return (
+    <AppBar position="fixed" open={open}>
+      <Toolbar style={{ backgroundColor: "#000000" }}>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={handleDrawerOpen}
+          edge="start"
+          sx={{ mr: 2, ...(open && { display: "none" }) }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <div>
+          <img src="epi2.jpg" style={{ height: "60px", marginRight: "10px" }} />
+        </div>
+        <Avatar
+          onClick={handleClick}
+          style={{ position: "absolute", right: "10px" }}
+        >
+          {user?.displayName[0]}
+        </Avatar>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={openMenu}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+        >
+          <MenuItem onClick={() => logOut()}>Logout</MenuItem>
+        </Menu>
+      </Toolbar>
+    </AppBar>
+  );
 }
 
-export default HomeAppBar
+export default HomeAppBar;

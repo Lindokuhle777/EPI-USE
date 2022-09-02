@@ -111,7 +111,7 @@ export const MainContextProvider = ({children})=>{
   
     useEffect(() => {
       const subscribe = onAuthStateChanged(auth, async(currUser) => {
-        // console.log(currUser)
+        console.log(currUser)
         setUser(currUser);
         if(currUser){
           navigate("/");
@@ -124,7 +124,7 @@ export const MainContextProvider = ({children})=>{
   
 
     return (
-        <MainContext.Provider value={{ user,setUser,logOut,googleSignIn,employees,setEmployees }}>
+        <MainContext.Provider value={{logOut, user,setUser,logOut,googleSignIn,employees,setEmployees }}>
           {children}
         </MainContext.Provider>
       );

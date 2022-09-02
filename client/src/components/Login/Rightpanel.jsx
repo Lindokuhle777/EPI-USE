@@ -131,7 +131,7 @@ import NewAccount from "./NewAccount";
       <div style={mainDiv}>
         
         {signUp ? (
-          <NewAccount/>
+          <NewAccount handleNewAccount={handleNewAccount}/>
         ) : (
           <Paper elevation={15} style={paperStyle}>
             <CssBaseline />

@@ -1,25 +1,31 @@
 import React, { useContext, useState, useEffect } from "react";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import { TextField, Stack, Box } from "@mui/material";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import { Divider, Paper, Typography } from "@mui/material";
-import InputAdornment from "@mui/material/InputAdornment";
-import Slide from "@mui/material/Slide";
-import Gravatar from "react-gravatar";
+import {
+  Divider,
+  Box,
+  Slide,
+  Button,
+  Dialog,
+  DialogActions,
+  CircularProgress,
+} from "@mui/material";
 import { MainContext } from "../../MainContext";
-import CircularProgress from "@mui/material/CircularProgress";
 import axios from "axios";
 import Employee from "./Employee";
 import NewProfile from "./NewProfile";
+import { storage } from "../../firebase.js";
 import ShowChildren from "./ShowChildren";
+import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
+import ShowProfile from "./ShowProfile";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
+
+const btnStyle = {
+  color: "black",
+  border: "2px solid black",
+  zIndex: "3",
+};
 
 export default function Profile({
   open,
@@ -28,13 +34,14 @@ export default function Profile({
   setCurrProfile,
   forceUpdate,
 }) {
-  const { employees, setEmployees } = useContext(MainContext);
+  const { employees, setEmployees, user } = useContext(MainContext);
   const [manager, setManager] = useState(null);
-  const [edit, setEdit] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [newProfile, setNewProfile] = useState(false);
   const [mode, setMode] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
   // the mode can be either newEmp,edit,showChildren or null
+  // newEmp and edit show the NewProfile component
+  // null shows the profile
 
   const getChildren = (childrenArr) => {
     //Given the children array on empNums
@@ -43,7 +50,6 @@ export default function Profile({
     let output = [];
     childrenArr.map((empNums) => {
       let child = employees.filter((item) => item.empNum === empNums)[0]; // Current child
-      // console.log(child);
       output.push(new Employee(child));
     });
 
@@ -79,6 +85,8 @@ export default function Profile({
   };
 
   const onSubmit = async (values, props) => {
+    // onSubmit for the profile form
+
     if (mode === "edit") {
       values.manager = manager.empNum;
       values.empNum = currProfile.empNum;
@@ -87,8 +95,17 @@ export default function Profile({
       values.empNum = "null";
     }
 
-    console.log(values);
+    // Save the image in farebase storage then get the download url and save it in the db
     setLoading(true);
+    if (selectedImage !== null) {
+      const storageRef = ref(storage, `/Pictures/${selectedImage.name}`);
+      await uploadBytes(storageRef, selectedImage);
+      let downloadUrl = await getDownloadURL(
+        ref(storage, `/Pictures/${selectedImage.name}`)
+      );
+      values.imageUrl = downloadUrl;
+    }
+
     await axios
       .post("http://localhost:5000/Users/", values)
       .then((res) => {
@@ -108,7 +125,6 @@ export default function Profile({
 
   const handleClose2 = (e) => {
     e.preventDefault();
-    // document.getElementById("dummyBtn").click();
     handleClose();
     setMode(null);
   };
@@ -122,8 +138,6 @@ export default function Profile({
       );
   }, [currProfile]);
 
- 
-
   return (
     <div>
       <Dialog
@@ -133,111 +147,78 @@ export default function Profile({
         onClose={handleClose2}
         aria-describedby="alert-dialog-slide-description"
       >
-        <Button
-          id="dummyBtn"
-          onClick={forceUpdate}
-          style={{ display: "none" }}
-        >
+        <Button id="dummyBtn" onClick={forceUpdate} style={{ display: "none" }}>
           dummy
         </Button>
         {mode === null && (
-          <DialogContent>
-            <div style={{ display: "flex", flexDirection: "row" }}>
-              <Gravatar
-                email={currProfile?.email}
-                size={150}
-                style={{ borderRadius: "50%", margin: 0 }}
-              />
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginLeft: "15px",
-                }}
-              >
-                <Typography variant="h5">
-                  {currProfile?.firstName + " " + currProfile?.lastName}
-                </Typography>
-
-                <Typography variant="h5">{currProfile?.DOB}</Typography>
-
-                <Typography variant="subtitle1">
-                  {currProfile?.position}
-                </Typography>
-
-                <Typography variant="subtitle1">
-                  {currProfile?.email}
-                </Typography>
-                <Typography variant="subtitle1">
-                  {currProfile?.salary}
-                </Typography>
-                {manager && (
-                  <Typography variant="subtitle1">
-                    {"Managed by " +
-                      manager?.first_name +
-                      " " +
-                      manager?.last_name}
-                  </Typography>
-                )}
-              </div>
-            </div>
-          </DialogContent>
+          <ShowProfile currProfile={currProfile} manager={manager} />
         )}
 
-        {mode === "edit" && 
+        {(mode === "edit" || mode === "newEmp") && (
           <NewProfile
             mode={mode}
             currProfile={currProfile}
             handleSave={handleSave}
             onSubmit={onSubmit}
+            setSelectedImage={setSelectedImage}
           />
-        }
-
-        {mode === "newEmp" && 
-          <NewProfile
-            mode={mode}
-            currProfile={currProfile}
-            handleSave={handleSave}
-            onSubmit={onSubmit}
-          />
-        }
+        )}
 
         {mode === "showChildren" && (
           <ShowChildren childrenArr={getChildren(currProfile.children)} />
         )}
+
         <Divider />
 
-        <DialogActions>
-          {loading ? (
-            <Box sx={{ display: "flex" }}>
-              <CircularProgress />
-            </Box>
-          ) : (
-            <>
-              {mode !== null && <Button onClick={()=>setMode(null)} >Profile</Button>}
-              {mode === null && (
-                <>
-                
-                  <Button onClick={() => handleMode("edit")}>Edit</Button>
-                  <Button onClick={() => handleMode("newEmp")}>
-                    New Employee
+        {user?.email === currProfile?.email && (
+          <DialogActions style={{ padding: "10px" }}>
+            {loading ? (
+              <Box sx={{ display: "flex", margin: "auto auto" }}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <>
+                {mode !== null && (
+                  <Button style={btnStyle} onClick={() => setMode(null)}>
+                    Profile
                   </Button>
-                  <Button onClick={handleDelete}>Delete</Button>
-                  <Button onClick={() => handleMode("showChildren")}>
-                    Children
+                )}
+                {mode === null && (
+                  <>
+                    <Button style={btnStyle} onClick={() => handleMode("edit")}>
+                      Edit
+                    </Button>
+                    <Button
+                      style={btnStyle}
+                      onClick={() => handleMode("newEmp")}
+                    >
+                      New Employee
+                    </Button>
+                    <Button style={btnStyle} onClick={handleDelete}>
+                      Delete
+                    </Button>
+                    <Button
+                      style={btnStyle}
+                      onClick={() => handleMode("showChildren")}
+                    >
+                      Children
+                    </Button>
+                  </>
+                )}
+
+                {(mode === "edit" || mode === "newEmp") && (
+                  <Button style={btnStyle} onClick={handleSave}>
+                    Save
                   </Button>
-                </>
-              )}
+                )}
 
-              {mode === "edit" && <Button onClick={handleSave}>Save</Button>}
-              {mode === "newEmp" && <Button onClick={handleSave}>Save</Button>}
-              
-
-
-              <Button onClick={handleClose2}>close</Button>
-            </>
-          )}
-        </DialogActions>
+                <Button style={btnStyle} id="closeBtn" onClick={handleClose2}>
+                  close
+                </Button>
+              </>
+            )}
+          </DialogActions>
+        )}
       </Dialog>
     </div>
   );
