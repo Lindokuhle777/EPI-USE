@@ -93,11 +93,13 @@ export const MainContextProvider = ({children})=>{
   
     const logOut = async () => {
       await signOut(auth);
+      const localStorage = window.localStorage;
+      localStorage.getItem("user")!==null && localStorage.removeItem("user");
       setUser(null);
     };
 
     const getData = async () => {
-      await axios.get("http://localhost:5000/Users/GetEmployees").then((response) => {
+      await axios.get("Employees/GetEmployees").then((response) => {
         setEmployees(response.data)
       })
     }
@@ -107,11 +109,18 @@ export const MainContextProvider = ({children})=>{
       getData();
     },[])
 
-    // logOut()
+    useEffect(() => {
+      const tempUser = window.localStorage.getItem("User");
+      if(tempUser!==null) {
+        const temp = JSON.parse(tempUser);
+        setUser(temp);
+        navigate("/");
+      }
+    },[])
+
   
     useEffect(() => {
       const subscribe = onAuthStateChanged(auth, async(currUser) => {
-        console.log(currUser)
         setUser(currUser);
         if(currUser){
           navigate("/");

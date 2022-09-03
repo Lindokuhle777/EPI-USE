@@ -4,13 +4,15 @@ import {
   TextField,
   Button,
   IconButton,
+  Snackbar,
 } from "@mui/material";
-import React, { useContext } from "react";
+import React, { useContext,useState} from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as YUP from "yup";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-//   import axios from "axios";
-//   import { LoginContext } from "./LoginContext";
+import axios from "axios";
+
+
 
 const paperStyle = {
   width: "30%",
@@ -34,9 +36,11 @@ const btnStyle = {
   backgroundColor: "#31AFB4",
   color: "#FFFFFF",
 };
-function NewAccount({ handleNewAccount }) {
-  // const { setMessage, setOpen } = useContext(LoginContext);
+function NewAccount({ handleNewAccount,setMessageType,OpenSnackbar }) {
+
+
   const initialValues = {
+    name:"",
     email: "",
     password: "",
     conPassword: "",
@@ -48,20 +52,20 @@ function NewAccount({ handleNewAccount }) {
       name: values.name,
       password: values.password,
     };
-    //   await axios.post("/NewUser", data).then((response) => {
-
-    //     if (response.data === "added") {
-    //       setMessage("ingenile")
-    //       setOpen(true)
-    //       handleNewAccount();
-    //     } else {
-    //       setMessage("Account with that email exists")
-    //       setOpen(true)
-    //     }
-    //   });
+    await axios.post("Users/NewUser", data).then((response) => {
+      if (response.data === "AccountCreated") {
+        setMessageType({message: "Account Created",type:"success"});
+        OpenSnackbar();
+        handleNewAccount();
+      } else {
+        setMessageType({message: "Account with that email already exists",type:"info"});
+        OpenSnackbar();
+      }
+    });
   };
 
   const validation = YUP.object().shape({
+    name:YUP.string().required(),
     email: YUP.string().email("Enter valid email").required("Required"),
     password: YUP.string()
       .min(
@@ -77,12 +81,10 @@ function NewAccount({ handleNewAccount }) {
 
   return (
     <Paper elevation={15} style={paperStyle}>
-      <div style={{ position: "absolute",left:10 }}> <IconButton onClick={handleNewAccount} >
+      <div style={{ position: "absolute", left: 10 }}> <IconButton onClick={handleNewAccount} >
         <ArrowBackIcon />
       </IconButton>
       </div>
-
-
 
       <Typography
         variant="h4"
@@ -106,6 +108,15 @@ function NewAccount({ handleNewAccount }) {
               paddingRight: "7%",
             }}
           >
+             <Field
+              as={TextField}
+              label="Name"
+              name="name"
+              type="text"
+              size="small"
+              style={fieldStyles}
+              helperText={<ErrorMessage name="name" />}
+            />
 
             <Field
               as={TextField}
@@ -140,6 +151,7 @@ function NewAccount({ handleNewAccount }) {
           </Form>
         )}
       </Formik>
+      
     </Paper>
   );
 }

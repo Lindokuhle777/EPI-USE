@@ -69,7 +69,7 @@ export default function Profile({
 
     setLoading(true);
     await axios
-      .post("http://localhost:5000/Users/Delete", {
+      .post("/Employees/Delete", {
         empNum: currProfile.empNum,
       })
       .then((res) => {
@@ -107,7 +107,7 @@ export default function Profile({
     }
 
     await axios
-      .post("http://localhost:5000/Users/", values)
+      .post("/Employees/", values)
       .then((res) => {
         const newEmp = res.data;
         if (mode === "edit") {
