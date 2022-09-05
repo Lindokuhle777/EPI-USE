@@ -146,7 +146,7 @@ function Login() {
             variant="h4"
             style={{
               marginTop: "5%",
-              color: "#115571",
+              color: "black",
             }}
           >
             LOGIN
@@ -183,6 +183,7 @@ function Login() {
                     backgroundColor: "#31AFB4",
                     width: "50%",
                     margin: "3% auto",
+                    backgroundColor: "white", color: "black", border: "2px solid black"
                   }}
                   variant="contained"
                 >
@@ -204,7 +205,7 @@ function Login() {
           </div>
           <Divider>OR</Divider>
           <Button
-            style={{ ...btnStyle, backgroundColor: "#31AFB4", color: "white" }}
+            style={{ ...btnStyle, backgroundColor: "white", color: "black", border: "2px solid black"}}
             onClick={handleGoogleSignIn}
             variant="outlined"
           >

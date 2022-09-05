@@ -6,6 +6,7 @@ import Employee from "./Employee";
 import Profile from "./Profile";
 import { HomeContext } from "./HomeContext";
 import { styled } from "@mui/material/styles";
+import { Box,CircularProgress } from "@mui/material"
 import HomeAppBar from "./HomeAppBar";
 import SearchDrawer from "./SearchDrawer";
 
@@ -46,7 +47,7 @@ function useForceUpdate() {
 
 function Home() {
   const [root, setRoot] = useState(null);
-  const { employees } = useContext(MainContext);
+  const { employees, getData } = useContext(MainContext);
   const [openProfile, setOpenProfile] = useState(false); // Open the profile dialog
   const [currProfile, setCurrProfile] = useState(null); // Employee object of the current profile dialog. The one that is currently open
   const forceUpdate = useForceUpdate(); // Custom hook, to force this component to re render
@@ -56,6 +57,7 @@ function Home() {
     setCurrProfile(node);
     setOpenProfile(true);
   };
+
 
   const handleCloseProfile = () => {
     setOpenProfile(false);
@@ -71,6 +73,8 @@ function Home() {
 
   useEffect(() => {
     // Make the CEO the root of the graph
+    getData();
+    forceUpdate();
     for (let i = 0; i < employees.length; i++) {
       const curr = employees[i];
       if (curr.position === "CEO") {
@@ -78,15 +82,16 @@ function Home() {
         break;
       }
     }
-  }, []);
+  }, [employees]);
 
   return (
     <div
       style={{
         width: "100%",
         display: "flex",
-        backgroundColor: "rgba(0,0,0,0.1)",
-        height: "100vh",
+        height: "100%",
+        minHeight: "100vh",
+        overFlow: "auto"
       }}
     >
       <HomeContext.Provider
@@ -102,8 +107,8 @@ function Home() {
         <Main open={open}>
           <DrawerHeader />
           {/* Not visiblle, Used to add margin Top so that the fixed app bar doesn't hide some components  */}
-
-          <Tree
+          
+           <Tree
             lineWidth="2px"
             label={
               <div>
@@ -114,16 +119,20 @@ function Home() {
               </div>
             }
           >
+            {employees?.length === 0 && <Box sx={{ display: "block", margin: "auto auto" }}>
+            <CircularProgress />
+          </Box>}
             {root && <CustomTreeNode node={new Employee(root)} />}
           </Tree>
 
-          <Profile
-            open={openProfile}
-            handleClose={handleCloseProfile}
-            currProfile={currProfile}
-            setCurrProfile={setCurrProfile}
-            forceUpdate={forceUpdate}
-          />
+            <Profile
+              open={openProfile}
+              handleClose={handleCloseProfile}
+              currProfile={currProfile}
+              setCurrProfile={setCurrProfile}
+              forceUpdate={forceUpdate}
+            />
+
         </Main>
       </HomeContext.Provider>
     </div>

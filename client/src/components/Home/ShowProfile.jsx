@@ -27,7 +27,7 @@ function ShowProfile({currProfile,manager}) {
         )}
         {currProfile?.imageUrl !== null && (
           <img
-            style={{ width: 150, height: 150, borderRadius: "50%" }}
+            style={{ width: 150, height: 150, borderRadius: "50%",margin:"auto auto",display:"block" }}
             src={currProfile?.imageUrl}
           />
         )}
@@ -44,7 +44,7 @@ function ShowProfile({currProfile,manager}) {
           </Typography>
 
           <Typography variant="h6">
-            {"Birth Date: " + currProfile?.DOB}
+            {"Birth Date: " + new Date(currProfile?.DOB).toLocaleDateString()}
           </Typography>
 
           <Typography variant="subtitle1">{currProfile?.position}</Typography>

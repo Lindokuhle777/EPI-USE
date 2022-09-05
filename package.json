@@ -1,0 +1,29 @@
+{
+    "name": "deployment_manager",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+      "heroku-prebuild": "cd backend && npm i && cd .. && cd client && npm i && cd ..",
+      "build": "cd client && npm run build",
+      "start": "cd backend && npm start"
+    },
+    "eslintConfig": {
+      "extends": [
+        "react-app",
+        "react-app/jest"
+      ]
+    },
+    "browserslist": {
+      "production": [
+        ">0.2%",
+        "not dead",
+        "not op_mini all"
+      ],
+      "development": [
+        "last 1 chrome version",
+        "last 1 firefox version",
+        "last 1 safari version"
+      ]
+    }
+  }
+  

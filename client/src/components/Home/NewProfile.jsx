@@ -7,7 +7,11 @@ import {
   DialogTitle,
   Avatar,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
+import dayjs from 'dayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as YUP from "yup";
 import Gravatar from "react-gravatar";
@@ -20,7 +24,7 @@ const fieldStyles = {
 // Handle's both editing employee information and adding a new used
 
 function NewProfile({ mode, currProfile, onSubmit, setSelectedImage }) {
- 
+
 
   const validation = YUP.object().shape({
     fistName: YUP.string().required("Required"),
@@ -31,12 +35,14 @@ function NewProfile({ mode, currProfile, onSubmit, setSelectedImage }) {
     salary: YUP.string().required("Required"),
   });
 
-  
+  // useEffect(() => { console.log(new Date(currProfile.DOB));console.log(currProfile.DOB)}, [])
+
+
   const initialValues = {
     firstName: mode === "edit" ? currProfile.firstName : "",
     lastName: mode === "edit" ? currProfile.lastName : "",
     position: mode === "edit" ? currProfile.position : "",
-    DOB: mode === "edit" ? currProfile.DOB : "",
+    DOB: mode === "edit" ? new Date(currProfile.DOB) : "",
     salary: mode === "edit" ? currProfile.salary : "",
     email: mode === "edit" ? currProfile.email : "",
   };
@@ -45,6 +51,7 @@ function NewProfile({ mode, currProfile, onSubmit, setSelectedImage }) {
     currProfile.imageUrl = URL.createObjectURL(event.target.files[0]);
     setSelectedImage(event.target.files[0]);
   };
+  const [value, setValue] = React.useState(dayjs());
 
   return (
     <>
@@ -171,7 +178,18 @@ function NewProfile({ mode, currProfile, onSubmit, setSelectedImage }) {
                       style={fieldStyles}
                       helperText={<ErrorMessage name="email" />}
                     />
-                    <Field
+                    <LocalizationProvider dateAdapter={AdapterDayjs}><DatePicker
+                      disableFuture
+                      label="Date of birth"
+                      openTo="year"
+                      views={['year', 'month', 'day']}
+                      onChange={(value) => props.setFieldValue("DOB", value, true)}
+                      value={props.values.DOB}
+
+                      renderInput={(params) => <TextField name="DOB" {...params} />}
+                    /></LocalizationProvider>
+
+                    {/* <Field
                       as={TextField}
                       label="Birth Date"
                       name="DOB"
@@ -180,7 +198,7 @@ function NewProfile({ mode, currProfile, onSubmit, setSelectedImage }) {
                       required
                       style={fieldStyles}
                       helperText={<ErrorMessage name="DOB" />}
-                    />
+                    /> */}
                     <Field
                       as={TextField}
                       label="Position"
@@ -196,6 +214,7 @@ function NewProfile({ mode, currProfile, onSubmit, setSelectedImage }) {
                       label="Salary"
                       name="salary"
                       required
+                      type="number"
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">R</InputAdornment>

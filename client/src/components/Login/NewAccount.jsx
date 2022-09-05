@@ -33,9 +33,11 @@ const fieldStyles = {
 const btnStyle = {
   marginTop: "6%",
   marginBottom: "6%",
-  backgroundColor: "#31AFB4",
-  color: "#FFFFFF",
+  backgroundColor: "white",
+  color: "black",
+  border: "1px solid black",
 };
+
 function NewAccount({ handleNewAccount,setMessageType,OpenSnackbar }) {
 
 
@@ -52,7 +54,7 @@ function NewAccount({ handleNewAccount,setMessageType,OpenSnackbar }) {
       name: values.name,
       password: values.password,
     };
-    await axios.post("Users/NewUser", data).then((response) => {
+    await axios.post("/Users/NewAccount", data).then((response) => {
       if (response.data === "AccountCreated") {
         setMessageType({message: "Account Created",type:"success"});
         OpenSnackbar();
@@ -88,7 +90,7 @@ function NewAccount({ handleNewAccount,setMessageType,OpenSnackbar }) {
 
       <Typography
         variant="h4"
-        style={{ color: "#115571", }}
+        style={{ color: "black", }}
       >
         New Account
       </Typography>

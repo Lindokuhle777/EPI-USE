@@ -27,6 +27,8 @@ const btnStyle = {
   zIndex: "3",
 };
 
+//Profile Dialog
+
 export default function Profile({
   open,
   handleClose,
@@ -76,7 +78,7 @@ export default function Profile({
         if (res.data == "Deleted") {
           setLoading(false);
           forceUpdate();
-          // window.location.reload();
+          window.location.reload();
         }
       })
       .catch((err) => {
@@ -85,15 +87,26 @@ export default function Profile({
   };
 
   const onSubmit = async (values, props) => {
-    // onSubmit for the profile form
+    
 
     if (mode === "edit") {
-      values.manager = manager.empNum;
+    
+      if (manager === null || manager === undefined) {
+        
+        values.manager = "";
+      }else{
+        values.manager  = manager.empNum;
+      }
       values.empNum = currProfile.empNum;
+      if(values.DOB?.$d !== undefined){
+        values.DOB = values.DOB.$d.toString();
+      }
     } else if (mode === "newEmp") {
       values.manager = currProfile.empNum;
       values.empNum = "null";
+      values.DOB = values.DOB.$d.toString();
     }
+    
 
     // Save the image in farebase storage then get the download url and save it in the db
     setLoading(true);
@@ -107,7 +120,7 @@ export default function Profile({
     }
 
     await axios
-      .post("/Employees/", values)
+      .post("/Employees", values)
       .then((res) => {
         const newEmp = res.data;
         if (mode === "edit") {
@@ -119,6 +132,8 @@ export default function Profile({
         setMode(null);
         setCurrProfile(new Employee(newEmp));
         setEmployees([...temp, newEmp]);
+
+        mode!=="edit" && window.location.reload();
       })
       .catch((err) => console.error(err));
   };
@@ -130,12 +145,18 @@ export default function Profile({
   };
 
   useEffect(() => {
-    currProfile &&
+    
+    if(currProfile){
+      const tempManager = employees.filter(
+        (employee) => employee.empNum === currProfile.manager
+      )
+      tempManager.length>0 ?
       setManager(
-        employees.filter(
-          (employee) => employee.empNum === currProfile.manager
-        )[0]
-      );
+        tempManager[0]
+      ):setManager(null);
+
+    }
+    
   }, [currProfile]);
 
   return (
@@ -170,7 +191,7 @@ export default function Profile({
 
         <Divider />
 
-        {user?.email === currProfile?.email && (
+        {user.email === currProfile?.email && (
           <DialogActions style={{ padding: "10px" }}>
             {loading ? (
               <Box sx={{ display: "flex", margin: "auto auto" }}>
