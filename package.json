@@ -1,29 +1,24 @@
 {
-    "name": "deployment_manager",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-      "heroku-prebuild": "cd backend && npm i && cd .. && cd client && npm i && cd ..",
-      "build": "cd client && npm run build",
-      "start": "cd backend && npm start"
-    },
-    "eslintConfig": {
-      "extends": [
-        "react-app",
-        "react-app/jest"
-      ]
-    },
-    "browserslist": {
-      "production": [
-        ">0.2%",
-        "not dead",
-        "not op_mini all"
-      ],
-      "development": [
-        "last 1 chrome version",
-        "last 1 firefox version",
-        "last 1 safari version"
-      ]
-    }
+  "name": "deployement",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "EPI-USE Technical Assessment",
+  "main": "index.js",
+  "scripts": {
+    "heroku-prebuild": "cd backend && npm i && cd .. && cd client && npm i && cd ..",
+    "build": "cd client && npm run build",
+    "start": "cd backend && npm start"
+  },
+  "author": "Lindokuhle Mabena",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.2",
+    "express": "^4.18.1",
+    "firebase": "^9.9.3",
+    "uid": "^2.0.0"
   }
-  
+}
