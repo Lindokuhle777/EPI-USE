@@ -87,18 +87,18 @@ export default function Profile({
   };
 
   const onSubmit = async (values, props) => {
-    
+
 
     if (mode === "edit") {
-    
+
       if (manager === null || manager === undefined) {
-        
+
         values.manager = "";
-      }else{
-        values.manager  = manager.empNum;
+      } else {
+        values.manager = manager.empNum;
       }
       values.empNum = currProfile.empNum;
-      if(values.DOB?.$d !== undefined){
+      if (values.DOB?.$d !== undefined) {
         values.DOB = values.DOB.$d.toString();
       }
     } else if (mode === "newEmp") {
@@ -106,7 +106,7 @@ export default function Profile({
       values.empNum = "null";
       values.DOB = values.DOB.$d.toString();
     }
-    
+
 
     // Save the image in farebase storage then get the download url and save it in the db
     setLoading(true);
@@ -133,7 +133,7 @@ export default function Profile({
         setCurrProfile(new Employee(newEmp));
         setEmployees([...temp, newEmp]);
 
-        mode!=="edit" && window.location.reload();
+        mode !== "edit" && window.location.reload();
       })
       .catch((err) => console.error(err));
   };
@@ -145,18 +145,18 @@ export default function Profile({
   };
 
   useEffect(() => {
-    
-    if(currProfile){
+
+    if (currProfile) {
       const tempManager = employees.filter(
         (employee) => employee.empNum === currProfile.manager
       )
-      tempManager.length>0 ?
-      setManager(
-        tempManager[0]
-      ):setManager(null);
+      tempManager.length > 0 ?
+        setManager(
+          tempManager[0]
+        ) : setManager(null);
 
     }
-    
+
   }, [currProfile]);
 
   return (
@@ -190,21 +190,16 @@ export default function Profile({
         )}
 
         <Divider />
+        <DialogActions style={{ padding: "10px" }}>
+          {loading ? (
+            <Box sx={{ display: "flex", margin: "auto auto" }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            <>
 
-        {user.email === currProfile?.email && (
-          <DialogActions style={{ padding: "10px" }}>
-            {loading ? (
-              <Box sx={{ display: "flex", margin: "auto auto" }}>
-                <CircularProgress />
-              </Box>
-            ) : (
-              <>
-                {mode !== null && (
-                  <Button style={btnStyle} onClick={() => setMode(null)}>
-                    Profile
-                  </Button>
-                )}
-                {mode === null && (
+              {mode === null && user.email === currProfile?.email &&
+                (
                   <>
                     <Button style={btnStyle} onClick={() => handleMode("edit")}>
                       Edit
@@ -218,28 +213,35 @@ export default function Profile({
                     <Button style={btnStyle} onClick={handleDelete}>
                       Delete
                     </Button>
-                    <Button
-                      style={btnStyle}
-                      onClick={() => handleMode("showChildren")}
-                    >
-                      Children
-                    </Button>
+
                   </>
                 )}
-
-                {(mode === "edit" || mode === "newEmp") && (
-                  <Button style={btnStyle} onClick={handleSave}>
-                    Save
-                  </Button>
-                )}
-
-                <Button style={btnStyle} id="closeBtn" onClick={handleClose2}>
-                  close
+              {mode !== null && (
+                <Button style={btnStyle} onClick={() => setMode(null)}>
+                  Profile
                 </Button>
-              </>
-            )}
-          </DialogActions>
-        )}
+              )}
+              {(mode === "edit" || mode === "newEmp") && (
+                <Button style={btnStyle} onClick={handleSave}>
+                  Save
+                </Button>
+              )}
+              {mode === null && <Button
+                style={btnStyle}
+                onClick={() => handleMode("showChildren")}
+              >
+                Children
+              </Button>
+              }
+
+              <Button style={btnStyle} id="closeBtn" onClick={handleClose2}>
+                close
+              </Button>
+            </>
+          )}
+        </DialogActions>
+
+
       </Dialog>
     </div>
   );

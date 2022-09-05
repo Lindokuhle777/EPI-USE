@@ -5,6 +5,20 @@ import Gravatar from "react-gravatar";
 //Used to show the profile
 // If the employee hasn't uploaded an image, we use Gravatar
 function ShowProfile({currProfile,manager}) {
+  const handleManager = (event)=>{
+    event.preventDefault();
+    document.getElementById(manager?.empNum).click();
+  }
+
+  
+
+  document.getElementById("manBtn")?.addEventListener("mouseover", ()=>{
+    document.getElementById("manBtn").style.cssText = "text-decoration: underline;"
+  })
+  document.getElementById("manBtn")?.addEventListener("mouseout", ()=>{
+    document.getElementById("manBtn").style.cssText = "text-decoration:'';"
+  })
+
   return (
     <DialogContent style={{ backgroundColor: "rgba(0,0,0,0.06)" }}>
       <div
@@ -43,7 +57,7 @@ function ShowProfile({currProfile,manager}) {
             {currProfile?.firstName + " " + currProfile?.lastName}
           </Typography>
 
-          <Typography variant="h6">
+          <Typography  variant="h6">
             {"Birth Date: " + new Date(currProfile?.DOB).toLocaleDateString()}
           </Typography>
 
@@ -55,7 +69,8 @@ function ShowProfile({currProfile,manager}) {
           </Typography>
           {manager && (
             <Typography variant="subtitle1">
-              {"Managed by " + manager?.first_name + " " + manager?.last_name}
+              Managed by <Typography style={{cursor:"pointer"}} id="manBtn" variant="button" onClick={handleManager}>{manager?.first_name + " " + manager?.last_name}</Typography>
+              
             </Typography>
           )}
         </div>
