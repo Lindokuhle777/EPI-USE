@@ -15,6 +15,9 @@ import { useNavigate } from "react-router-dom";
 import NewAccount from "./NewAccount";
 import axios from "axios";
 import MuiAlert from '@mui/material/Alert';
+import { alpha, styled } from '@mui/material/styles';
+import CssTextField from "../CssTextField";
+
 
 //Login Page
 
@@ -32,7 +35,10 @@ const fieldStyles = {
   marginTop: "3%",
   marginLeft: "5%",
   marginRight: "5%",
+  borderColor:"black"
 };
+
+
 
 
 const paperStyle = {
@@ -136,7 +142,9 @@ function Login() {
 
   return (
     <div style={mainDiv}>
-
+     
+      <img style={{width: '100%', height:"100%",position: 'absolute'}} src="background.png"/>
+     
       {signUp ? (
         <NewAccount handleNewAccount={handleNewAccount} OpenSnackbar={OpenSnackbar} setMessageType={setMessageType} />
       ) : (
@@ -158,8 +166,9 @@ function Login() {
           >
             {(props) => (
               <Form style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                {/* <CssTextField label="Custom CSS" id="custom-css-outlined-input" /> */}
                 <Field
-                  as={TextField}
+                  as={CssTextField}
                   label="Email"
                   name="email"
                   type="email"
@@ -169,7 +178,7 @@ function Login() {
                 />
 
                 <Field
-                  as={TextField}
+                  as={CssTextField}
                   label="Password"
                   name="password"
                   type="password"

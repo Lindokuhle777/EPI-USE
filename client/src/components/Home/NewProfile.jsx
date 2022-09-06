@@ -1,7 +1,6 @@
 import {
   Button,
   DialogContent,
-  TextField,
   Stack,
   InputAdornment,
   DialogTitle,
@@ -15,6 +14,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as YUP from "yup";
 import Gravatar from "react-gravatar";
+import CssTextField from "../CssTextField";
 
 const fieldStyles = {
   marginTop: "5px",
@@ -35,8 +35,7 @@ function NewProfile({ mode, currProfile, onSubmit, setSelectedImage }) {
     salary: YUP.string().required("Required"),
   });
 
-  // useEffect(() => { console.log(new Date(currProfile.DOB));console.log(currProfile.DOB)}, [])
-
+ 
 
   const initialValues = {
     firstName: mode === "edit" ? currProfile.firstName : "",
@@ -51,8 +50,7 @@ function NewProfile({ mode, currProfile, onSubmit, setSelectedImage }) {
     currProfile.imageUrl = URL.createObjectURL(event.target.files[0]);
     setSelectedImage(event.target.files[0]);
   };
-  const [value, setValue] = React.useState(dayjs());
-
+  
   return (
     <>
       <DialogTitle
@@ -149,7 +147,7 @@ function NewProfile({ mode, currProfile, onSubmit, setSelectedImage }) {
                 <Form>
                   <Stack spacing={1}>
                     <Field
-                      as={TextField}
+                      as={CssTextField}
                       label="First Name"
                       name="firstName"
                       type="text"
@@ -159,7 +157,7 @@ function NewProfile({ mode, currProfile, onSubmit, setSelectedImage }) {
                       helperText={<ErrorMessage name="firstName" />}
                     />
                     <Field
-                      as={TextField}
+                      as={CssTextField}
                       label="Last Name"
                       name="lastName"
                       type="text"
@@ -169,7 +167,7 @@ function NewProfile({ mode, currProfile, onSubmit, setSelectedImage }) {
                       helperText={<ErrorMessage name="lastName" />}
                     />
                     <Field
-                      as={TextField}
+                      as={CssTextField}
                       label="Email"
                       name="email"
                       type="email"
@@ -186,31 +184,23 @@ function NewProfile({ mode, currProfile, onSubmit, setSelectedImage }) {
                       onChange={(value) => props.setFieldValue("DOB", value, true)}
                       value={props.values.DOB}
 
-                      renderInput={(params) => <TextField name="DOB" {...params} />}
+                      renderInput={(params) => <CssTextField size="small" name="DOB" {...params} />}
                     /></LocalizationProvider>
 
-                    {/* <Field
-                      as={TextField}
-                      label="Birth Date"
-                      name="DOB"
-                      type="text"
-                      size="small"
-                      required
-                      style={fieldStyles}
-                      helperText={<ErrorMessage name="DOB" />}
-                    /> */}
+                    
+                    
                     <Field
-                      as={TextField}
+                       as={CssTextField}
                       label="Position"
                       name="position"
                       type="text"
                       size="small"
                       required
-                      style={fieldStyles}
+                      style={{...fieldStyles,marginTop:"8px"}}
                       helperText={<ErrorMessage name="position" />}
                     />
                     <Field
-                      as={TextField}
+                      as={CssTextField}
                       label="Salary"
                       name="salary"
                       required

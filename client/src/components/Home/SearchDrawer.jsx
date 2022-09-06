@@ -19,6 +19,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { Avatar, TextField } from "@mui/material";
 import { MainContext } from "../../MainContext";
 import Gravatar from "react-gravatar";
+import CssTextField from "../CssTextField";
 
 /*
   Search Function
@@ -167,7 +168,7 @@ function SearchDrawer({ open, handleDrawerClose }) {
         style={{ padding: "10px 15px", backgroundColor: "rgba(0,0,0,0.06)" }}
       >
         {" "}
-        <TextField
+        <CssTextField
           id="searchBox"
           onChange={onChange}
           fullWidth

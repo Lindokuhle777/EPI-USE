@@ -10,6 +10,7 @@ import { Box,CircularProgress } from "@mui/material"
 import HomeAppBar from "./HomeAppBar";
 import SearchDrawer from "./SearchDrawer";
 
+
 const drawerWidth = window.innerWidth * 0.3; // Drawer width must be 30% to the screen's width
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
