@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 import NewAccount from "./NewAccount";
 import axios from "axios";
 import MuiAlert from '@mui/material/Alert';
-import { alpha, styled } from '@mui/material/styles';
 import CssTextField from "../CssTextField";
 
 
@@ -105,6 +104,7 @@ function Login() {
 
         setUser({ email: data.email, displayName: res.data.name});
         setMessageType({message: "Logged in",type:"success"});
+        //save the currect user in localStorage so that they can be logged in automatically next time
         window.localStorage.setItem("user",JSON.stringify({ email: data.email, displayName: res.data.name}));
         OpenSnackbar();
         navigate("/");

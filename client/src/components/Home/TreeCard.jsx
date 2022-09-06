@@ -1,9 +1,7 @@
 import React, { useContext } from "react";
 import {
   Paper,
-  Typography,
   ListItem,
-  ListItemAvatar,
   ListItemText,
   ListItemIcon,
   Avatar,
@@ -17,7 +15,10 @@ const paperStyle = {
 };
 
 // Graph Node
+// shows an employee's first name, last name and profile picture
 // If the used hasn't uploaded an image, we use gravatar
+// the id of each card in the empNum
+
 
 function TreeCard({ node }) {
   const { handleClickOpenProfile } = useContext(HomeContext);
@@ -36,9 +37,7 @@ function TreeCard({ node }) {
         <ListItemIcon>
           {node.imageUrl !== null &&(<Avatar src={node.imageUrl}/>)}
           {node.imageUrl === null &&<Avatar><Gravatar email={node.email} style={{ margin: "3px" }} /></Avatar>}
-          
         </ListItemIcon>
-        
         <ListItemText
           primary={node.firstName + " " + node.lastName}
           secondary={node.position}

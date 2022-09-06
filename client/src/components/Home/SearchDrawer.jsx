@@ -167,7 +167,7 @@ function SearchDrawer({ open, handleDrawerClose }) {
       <div
         style={{ padding: "10px 15px", backgroundColor: "rgba(0,0,0,0.06)" }}
       >
-        {" "}
+        
         <CssTextField
           id="searchBox"
           onChange={onChange}

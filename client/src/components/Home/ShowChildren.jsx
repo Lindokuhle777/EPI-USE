@@ -6,15 +6,16 @@ import {
   ListItemIcon,
   Avatar,
   ListItemText,
+  Typography,
 } from "@mui/material";
 import React from "react";
 import Gravatar from "react-gravatar";
-import TreeCard from "./TreeCard";
+
 
 //Used to display all the children on the currProfile
 //Returns a DialogContent
 function ShowChildren({ childrenArr }) {
-  //childrenArr in a list of Employee objects
+
 
   const handleClick = (empNum) => {
     document.getElementById("closeBtn").click();
@@ -43,6 +44,7 @@ function ShowChildren({ childrenArr }) {
         }}
       >
         <List >
+          {childrenArr.length === 0 && <Typography variant="h5" fullWidth onWrap >On children</Typography>}
           {childrenArr.map((child) => (
             <ListItem
               key={child.empNum}

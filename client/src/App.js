@@ -10,6 +10,7 @@ function App() {
     <BrowserRouter>
     <MainContextProvider>
       <Routes>
+        {/* Protect the / route to that only logged in users can access it. */}
         <Route path="/" exact element={<Protected><Home /></Protected>}/>
         <Route path="/login" element={<Login />}/>
       </Routes>

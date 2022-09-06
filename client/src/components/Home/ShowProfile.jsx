@@ -10,14 +10,15 @@ function ShowProfile({currProfile,manager}) {
     document.getElementById(manager?.empNum).click();
   }
 
-  
+  //Add an onhover animation on the manager name  
 
   document.getElementById("manBtn")?.addEventListener("mouseover", ()=>{
     document.getElementById("manBtn").style.cssText = "text-decoration: underline;"
-  })
+  });
+
   document.getElementById("manBtn")?.addEventListener("mouseout", ()=>{
     document.getElementById("manBtn").style.cssText = "text-decoration:'';"
-  })
+  });
 
   return (
     <DialogContent style={{ backgroundColor: "rgba(0,0,0,0.06)" }}>

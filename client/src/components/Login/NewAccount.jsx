@@ -4,14 +4,15 @@ import {
   TextField,
   Button,
   IconButton,
-  Snackbar,
 } from "@mui/material";
-import React, { useContext,useState} from "react";
+import React from "react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as YUP from "yup";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import axios from "axios";
+import CssTextField from "../CssTextField";
 
+//New Account
 
 
 const paperStyle = {
@@ -37,6 +38,8 @@ const btnStyle = {
   color: "black",
   border: "1px solid black",
 };
+
+
 
 function NewAccount({ handleNewAccount,setMessageType,OpenSnackbar }) {
 
@@ -111,7 +114,7 @@ function NewAccount({ handleNewAccount,setMessageType,OpenSnackbar }) {
             }}
           >
              <Field
-              as={TextField}
+              as={CssTextField}
               label="Name"
               name="name"
               type="text"
@@ -121,7 +124,7 @@ function NewAccount({ handleNewAccount,setMessageType,OpenSnackbar }) {
             />
 
             <Field
-              as={TextField}
+              as={CssTextField}
               label="Email"
               name="email"
               type="email"
@@ -130,7 +133,7 @@ function NewAccount({ handleNewAccount,setMessageType,OpenSnackbar }) {
               helperText={<ErrorMessage name="email" />}
             />
             <Field
-              as={TextField}
+              as={CssTextField}
               label="Password"
               name="password"
               type="password"
@@ -139,7 +142,7 @@ function NewAccount({ handleNewAccount,setMessageType,OpenSnackbar }) {
               helperText={<ErrorMessage name="password" />}
             />
             <Field
-              as={TextField}
+              as={CssTextField}
               label="Confirm password"
               name="conPassword"
               type="password"

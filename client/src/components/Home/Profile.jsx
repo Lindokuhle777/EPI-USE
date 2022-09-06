@@ -145,7 +145,7 @@ export default function Profile({
   };
 
   useEffect(() => {
-
+    //find the manager the curr employee using their empNum
     if (currProfile) {
       const tempManager = employees.filter(
         (employee) => employee.empNum === currProfile.manager
